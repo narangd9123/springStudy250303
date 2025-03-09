@@ -3,6 +3,7 @@ package com.myCho.springStudy250303.controller;
 import com.myCho.springStudy250303.model.Board;
 import com.myCho.springStudy250303.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
@@ -31,6 +32,7 @@ class BoardApiController {
     }
 
     // Single item
+
     @GetMapping("/boards/{id}")
     Board one(@PathVariable Long id) {
         return repository.findById(id).orElse(null);
@@ -51,6 +53,7 @@ class BoardApiController {
                 });
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/boards/{id}")
     void deleteBoard(@PathVariable Long id) {
         repository.deleteById(id);

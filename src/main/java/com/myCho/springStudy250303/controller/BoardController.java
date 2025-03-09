@@ -2,6 +2,7 @@ package com.myCho.springStudy250303.controller;
 
 import com.myCho.springStudy250303.model.Board;
 import com.myCho.springStudy250303.repository.BoardRepository;
+import com.myCho.springStudy250303.service.BoardService;
 import com.myCho.springStudy250303.validator.BoardValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +29,9 @@ public class BoardController {
 
     @Autowired
     private BoardValidator boardValidator;
+
+    @Autowired
+    private BoardService boardService;
 
     @GetMapping("list")
     public String list(@PageableDefault(size = 2) Pageable pageable,
@@ -57,14 +63,16 @@ public class BoardController {
         return "board/form";
     }
 
-    @PostMapping("form")
-    public String greetingSubmit(@Valid Board board, BindingResult bindingResult) {
+    @PostMapping("/form")
+    public String postForm(@Valid Board board, BindingResult bindingResult, Authentication authentication) {
         boardValidator.validate(board, bindingResult);
-
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "board/form";
         }
-        boardRepository.save(board);
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        boardService.save(username, board);
+//        boardRepository.save(board);
         return "redirect:/board/list";
     }
 
