@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AccountController {
 
     @Autowired
-    private BoardService registerService;
+    private BoardService boardService;
 
     @GetMapping("/login")
     public String login() {
@@ -28,7 +28,7 @@ public class AccountController {
 
     @PostMapping("/register")
     public String joinProcess(@ModelAttribute User user) {
-        registerService.registerProcess(user);
+        boardService.registerProcess(user);
         return "redirect:/account/login";
     }
 }
