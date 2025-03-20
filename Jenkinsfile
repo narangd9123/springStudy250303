@@ -1,9 +1,10 @@
 pipeline {
-    agent { docker { image 'maven:3.9.6-eclipse-temurin-17-alpine' } }
+    agent { docker { image 'gradle:7.4.2-jdk17-alpine' } }
     stages {
         stage('build') {
             steps {
-                sh 'mvn --version'
+                sh './gradlew --version'  // Gradle 버전 확인
+                sh './gradlew build'      // 빌드 실행
             }
         }
     }
